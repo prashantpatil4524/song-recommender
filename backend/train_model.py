@@ -16,7 +16,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, f1_score
 from sklearn.impute import SimpleImputer
 
 warnings.filterwarnings("ignore")
@@ -88,6 +88,17 @@ def train():
         X_scaled, y_enc, test_size=0.2, random_state=42, stratify=y_enc
     )
 
+    # ── manual random oversampling to handle class imbalance in the training set
+    df_train = pd.DataFrame(X_train)
+    df_train['target'] = y_train
+    max_size = df_train['target'].value_counts().max()
+    resampled = []
+    for label, group in df_train.groupby('target'):
+        resampled.append(group.sample(max_size, replace=True, random_state=42))
+    df_resampled = pd.concat(resampled, axis=0)
+    X_train_res = df_resampled.drop(columns=['target']).values
+    y_train_res = df_resampled['target'].values
+
     # ── candidate models
     candidates = {
         "Random Forest":         RandomForestClassifier(n_estimators=200, random_state=42, n_jobs=-1),
@@ -101,17 +112,20 @@ def train():
     results = {}
     print("\n🏋️  Training models …\n")
     for name, model in candidates.items():
-        model.fit(X_train, y_train)
+        # Fit on oversampled training data
+        model.fit(X_train_res, y_train_res)
         y_pred = model.predict(X_test)
         acc    = accuracy_score(y_test, y_pred)
-        cv     = cross_val_score(model, X_scaled, y_enc, cv=5, scoring="accuracy").mean()
-        results[name] = {"model": model, "accuracy": acc, "cv_accuracy": cv}
-        print(f"  {name:<25}  acc={acc:.4f}  cv={cv:.4f}")
+        f1     = f1_score(y_test, y_pred, average="macro")
+        # Use balanced_accuracy for cross-validation score to reflect performance on all classes
+        cv     = cross_val_score(model, X_scaled, y_enc, cv=5, scoring="balanced_accuracy").mean()
+        results[name] = {"model": model, "accuracy": acc, "cv_accuracy": cv, "f1_macro": f1}
+        print(f"  {name:<25}  acc={acc:.4f}  f1_macro={f1:.4f}  cv={cv:.4f}")
 
-    # ── pick best by test accuracy
-    best_name = max(results, key=lambda n: results[n]["accuracy"])
+    # ── pick best by macro F1-score to ensure class diversity
+    best_name = max(results, key=lambda n: results[n]["f1_macro"])
     best      = results[best_name]
-    print(f"\n✅  Best model: {best_name}  (acc={best['accuracy']:.4f})")
+    print(f"\n✅  Best model: {best_name}  (acc={best['accuracy']:.4f}, f1_macro={best['f1_macro']:.4f})")
     print(classification_report(y_test, best["model"].predict(X_test),
                                 target_names=le.classes_))
 

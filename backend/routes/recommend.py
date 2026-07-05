@@ -54,17 +54,24 @@ def recommend():
         gmap    = pickle.load(open(os.path.join(MODELS_DIR, "genre_map.pkl"),     "rb"))
 
         genre_encoded = gmap.get(data.get("Gener", "Pop"), -1)
-        features_arr  = np.array([[
-            float(data.get("Release_Days",        365)),
-            float(data.get("Spotify_Streams",     500000)),
-            float(data.get("Spotify_Popularity",  70)),
-            int(data.get("Explicit_Track",        0)),
-            float(genre_encoded),
-            float(data.get("User_age",            25)),
-            int(data.get("User_Gender",           1)),
-        ]])
+        COLS = [
+            "Release_Days", "Spotify Streams", "Spotify Popularity",
+            "Explicit Track", "Gener", "User_age", "User_Gender"
+        ]
+        features_df = pd.DataFrame(
+            [[
+                float(data.get("Release_Days",        365)),
+                float(data.get("Spotify_Streams",     500000)),
+                float(data.get("Spotify_Popularity",  70)),
+                int(data.get("Explicit_Track",        0)),
+                float(genre_encoded),
+                float(data.get("User_age",            25)),
+                int(data.get("User_Gender",           1)),
+            ]],
+            columns=COLS
+        )
 
-        X_imp     = imputer.transform(features_arr)
+        X_imp     = imputer.transform(features_df)
         X_scaled  = scaler.transform(X_imp)
         pred_enc  = model.predict(X_scaled)[0]
         pred_genre = le.inverse_transform([pred_enc])[0]
