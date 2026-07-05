@@ -1,0 +1,93 @@
+name: SongIQ CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  # ── 1. Test & Train ──────────────────────────────────────────────────────
+  test-and-train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train ML models
+        run: python backend/train_model.py
+
+      - name: Run basic smoke test
+        run: |
+          python -c "
+          import pickle, os
+          models_dir = 'backend/models'
+          for f in ['best_model.pkl','scaler.pkl','imputer.pkl','label_encoder.pkl','genre_map.pkl','model_results.pkl']:
+              path = os.path.join(models_dir, f)
+              assert os.path.exists(path), f'Missing: {path}'
+              obj = pickle.load(open(path,'rb'))
+              print(f'OK: {f}  ->  {type(obj).__name__}')
+          print('All model artifacts verified!')
+          "
+
+      - name: Upload model artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-models
+          path: backend/models/*.pkl
+          retention-days: 7
+
+  # ── 2. Docker Build ──────────────────────────────────────────────────────
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test-and-train
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t songiq:latest .
+
+      - name: Smoke test container
+        run: |
+          docker run -d -p 5000:5000 --name songiq_test songiq:latest
+          sleep 10
+          curl -f http://localhost:5000/ || (docker logs songiq_test && exit 1)
+          docker stop songiq_test
+          docker rm songiq_test
+
+  # ── 3. Deploy (on push to main only) ────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/songiq:latest
+            ${{ secrets.DOCKER_USERNAME }}/songiq:${{ github.sha }}

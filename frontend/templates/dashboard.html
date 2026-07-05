@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – SongIQ</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">🎵 SongIQ</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/predict">Predict</a>
+    <a href="/recommend">Recommend</a>
+    <a href="/dashboard" class="active">Dashboard</a>
+  </div>
+</nav>
+
+<main class="page-main">
+  <div class="page-header">
+    <h1>📊 Dataset Dashboard</h1>
+    <p>Live insights from 4,600+ songs and user listening data.</p>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="sc-val" id="sc-total">—</div><div class="sc-label">Total Records</div></div>
+    <div class="stat-card"><div class="sc-val" id="sc-pop">—</div><div class="sc-label">Avg Popularity</div></div>
+    <div class="stat-card"><div class="sc-val" id="sc-age">—</div><div class="sc-label">Avg User Age</div></div>
+    <div class="stat-card"><div class="sc-val" id="sc-genres">—</div><div class="sc-label">Track Genres</div></div>
+  </div>
+
+  <!-- Charts row 1 -->
+  <div class="charts-row">
+    <div class="card chart-card">
+      <h2>Favourite Genre Distribution</h2>
+      <canvas id="favGenreChart"></canvas>
+    </div>
+    <div class="card chart-card">
+      <h2>Gender Split</h2>
+      <canvas id="genderChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Charts row 2 -->
+  <div class="charts-row">
+    <div class="card chart-card">
+      <h2>Age Group Distribution</h2>
+      <canvas id="ageChart"></canvas>
+    </div>
+    <div class="card chart-card">
+      <h2>Avg Popularity by Track Genre</h2>
+      <canvas id="popGenreChart"></canvas>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><p>SongIQ &copy; 2024</p></footer>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>

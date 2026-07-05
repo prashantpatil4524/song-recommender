@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SongIQ – Music Recommendation System</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">🎵 SongIQ</div>
+  <div class="nav-links">
+    <a href="/" class="active">Home</a>
+    <a href="/predict">Predict</a>
+    <a href="/recommend">Recommend</a>
+    <a href="/dashboard">Dashboard</a>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">AI-Powered Music Intelligence</div>
+      <h1>Discover Music<br><span class="gradient-text">You'll Love</span></h1>
+      <p class="hero-sub">Predict song popularity and get personalised genre recommendations using Machine Learning trained on 4,600+ songs.</p>
+      <div class="hero-btns">
+        <a href="/predict" class="btn btn-primary">Predict Popularity</a>
+        <a href="/recommend" class="btn btn-outline">Get Recommendations</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="music-card">
+        <div class="waveform">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="mc-info">
+          <div class="mc-title">AI Prediction Active</div>
+          <div class="mc-sub">6 ML Models Compared</div>
+        </div>
+        <div class="mc-score">98<small>%</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Cards -->
+  <section class="features">
+    <div class="feature-card" onclick="location.href='/predict'">
+      <div class="feat-icon">🤖</div>
+      <h3>Smart Prediction</h3>
+      <p>6 ML models compete — Random Forest, SVM, KNN, Gradient Boosting and more. Best accuracy model wins automatically.</p>
+      <span class="feat-link">Try it →</span>
+    </div>
+    <div class="feature-card" onclick="location.href='/recommend'">
+      <div class="feat-icon">🎯</div>
+      <h3>Genre Recommender</h3>
+      <p>Cosine similarity on 2,973 genres recommends music tailored to your age, gender and listening habits.</p>
+      <span class="feat-link">Explore →</span>
+    </div>
+    <div class="feature-card" onclick="location.href='/dashboard'">
+      <div class="feat-icon">📊</div>
+      <h3>Live Dashboard</h3>
+      <p>Visualise dataset insights — popularity trends, gender split, age distribution and model accuracy comparison.</p>
+      <span class="feat-link">View →</span>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <section class="stats-bar">
+    <div class="stat"><span class="stat-num">4,600+</span><span class="stat-label">Songs</span></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">ML Models</span></div>
+    <div class="stat"><span class="stat-num">2,973</span><span class="stat-label">Genres</span></div>
+    <div class="stat"><span class="stat-num">15</span><span class="stat-label">Track Genres</span></div>
+  </section>
+
+  <!-- Pipeline section -->
+  <section class="pipeline-section">
+    <h2>How It Works</h2>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-num">1</div>
+        <div class="pipe-label">Load Data</div>
+        <div class="pipe-sub">song.xlsx + data_by_genres.csv</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-num">2</div>
+        <div class="pipe-label">Clean & Encode</div>
+        <div class="pipe-sub">Impute, scale, label encode</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-num">3</div>
+        <div class="pipe-label">Train 6 Models</div>
+        <div class="pipe-sub">Cross-validation comparison</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-num">4</div>
+        <div class="pipe-label">Best Model Wins</div>
+        <div class="pipe-sub">Auto-selected by accuracy</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-num">5</div>
+        <div class="pipe-label">Predict + Recommend</div>
+        <div class="pipe-sub">Flask REST API serves results</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>SongIQ &copy; 2024 — Built with Flask, scikit-learn &amp; ❤️</p>
+</footer>
+<script src="/static/js/main.js"></script>
+</body>
+</html>

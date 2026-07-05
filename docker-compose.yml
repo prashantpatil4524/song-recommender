@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  songiq:
+    build: .
+    container_name: songiq_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data          # hot-reload data without rebuild
+      - ./backend/models:/app/backend/models
+    environment:
+      - FLASK_ENV=development
+      - PYTHONPATH=/app/backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

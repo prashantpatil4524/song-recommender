@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommend – SongIQ</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">🎵 SongIQ</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/predict">Predict</a>
+    <a href="/recommend" class="active">Recommend</a>
+    <a href="/dashboard">Dashboard</a>
+  </div>
+</nav>
+
+<main class="page-main">
+  <div class="page-header">
+    <h1>🎯 Genre Recommender</h1>
+    <p>Tell us about yourself — we'll predict your taste and find the most similar popular genres using cosine similarity.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card form-card">
+      <h2>Your Profile</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Preferred Track Genre</label>
+          <select id="Gener">
+            <option>Pop</option><option>Rap</option><option>Hip-Hop</option>
+            <option>Rock</option><option>Electronic</option><option>R&B</option>
+            <option>Country</option><option>Latin</option><option>Raggae</option>
+            <option>Classical</option><option>Jazz</option><option>Indie</option>
+            <option>K-Pop</option><option>Dance</option><option>Melody</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Age</label>
+          <input type="number" id="User_age" value="25" min="1" max="100">
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select id="User_Gender">
+            <option value="1">Male</option>
+            <option value="0">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Spotify Popularity (0-100)</label>
+          <input type="number" id="Spotify_Popularity" value="70" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label>Explicit Tracks OK?</label>
+          <select id="Explicit_Track">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary full-width" onclick="recommend()">
+        🎵 Find My Genres
+      </button>
+    </div>
+
+    <!-- Result -->
+    <div id="recResults" style="display:none">
+      <div class="card" style="margin-bottom:1rem">
+        <h2>Your Predicted Favourite</h2>
+        <div class="result-genre" id="predGenre">—</div>
+      </div>
+
+      <div class="card">
+        <h2>Recommended Genres</h2>
+        <div class="rec-grid" id="recGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card chart-card" style="margin-top:1.5rem">
+    <h2>Top Popular Genres</h2>
+    <canvas id="genreChart" height="100"></canvas>
+  </div>
+</main>
+
+<footer class="footer"><p>SongIQ &copy; 2024</p></footer>
+<script src="/static/js/recommend.js"></script>
+</body>
+</html>

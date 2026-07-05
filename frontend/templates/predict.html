@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predict Popularity – SongIQ</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">🎵 SongIQ</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/predict" class="active">Predict</a>
+    <a href="/recommend">Recommend</a>
+    <a href="/dashboard">Dashboard</a>
+  </div>
+</nav>
+
+<main class="page-main">
+  <div class="page-header">
+    <h1>🤖 Popularity Predictor</h1>
+    <p>Enter song and user details — our best ML model predicts the preferred music genre.</p>
+  </div>
+
+  <div class="two-col">
+    <!-- Form -->
+    <div class="card form-card">
+      <h2>Song Details</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Track Genre</label>
+          <select id="Gener">
+            <option>Pop</option><option>Rap</option><option>Hip-Hop</option>
+            <option>Rock</option><option>Electronic</option><option>R&B</option>
+            <option>Country</option><option>Latin</option><option>Raggae</option>
+            <option>Classical</option><option>Jazz</option><option>Indie</option>
+            <option>K-Pop</option><option>Dance</option><option>Melody</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Spotify Popularity (0-100)</label>
+          <input type="number" id="Spotify_Popularity" value="72" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label>Spotify Streams</label>
+          <input type="number" id="Spotify_Streams" value="500000" min="0">
+        </div>
+        <div class="form-group">
+          <label>Explicit Track</label>
+          <select id="Explicit_Track">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Release Days Ago</label>
+          <input type="number" id="Release_Days" value="365" min="0">
+        </div>
+      </div>
+
+      <h2 style="margin-top:1.5rem">User Details</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>User Age</label>
+          <input type="number" id="User_age" value="25" min="1" max="100">
+        </div>
+        <div class="form-group">
+          <label>User Gender</label>
+          <select id="User_Gender">
+            <option value="1">Male</option>
+            <option value="0">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary full-width" onclick="predict()">
+        🔮 Predict Genre Preference
+      </button>
+    </div>
+
+    <!-- Result -->
+    <div class="card result-card" id="resultCard" style="display:none">
+      <h2>Prediction Result</h2>
+      <div class="result-genre" id="resultGenre">—</div>
+      <div class="confidence-bar-wrap">
+        <div class="conf-label">Confidence</div>
+        <div class="conf-bar"><div class="conf-fill" id="confFill"></div></div>
+        <div class="conf-pct" id="confPct">—</div>
+      </div>
+
+      <div class="model-badge" id="modelBadge"></div>
+
+      <h3 style="margin-top:1.5rem">All Genre Probabilities</h3>
+      <div class="prob-list" id="probList"></div>
+    </div>
+
+    <!-- Model info card -->
+    <div class="card model-card" id="modelCard">
+      <h2>Model Leaderboard</h2>
+      <p class="muted">Loading model comparison…</p>
+      <div id="modelTable"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><p>SongIQ &copy; 2024</p></footer>
+<script src="/static/js/predict.js"></script>
+</body>
+</html>
