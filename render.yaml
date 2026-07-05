@@ -3,4 +3,5 @@ services:
     name: songiq
     runtime: docker
     plan: free
+    port: 5000
     healthCheckPath: /

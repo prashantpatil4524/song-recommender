@@ -26,8 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY --from=builder /app /app
 
 EXPOSE 5000
-
 ENV FLASK_ENV=production
 ENV PYTHONPATH=/app/backend
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "backend.app:create_app()"]
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120 "backend.app:create_app()"
+
+
